@@ -2,7 +2,7 @@ name: Tistory Backup
 
 on:
   schedule:
-    - cron: '15 5 * * *'
+    - cron: '0 3 * * *'
   workflow_dispatch:
 
 jobs:
