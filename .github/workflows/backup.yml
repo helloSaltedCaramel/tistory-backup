@@ -2,16 +2,21 @@ name: Tistory Backup
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 매일 오전 3시 실행 (한국 기준 12시)
-  workflow_dispatch:  # 수동 실행도 가능
+    - cron: '0 3 * * *'
+  workflow_dispatch:
 
 jobs:
   backup:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Setup Python
+    permissions: 
+      contents: write 
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
@@ -22,10 +27,10 @@ jobs:
       - name: Run backup script
         run: python backup.py
 
-      - name: Commit & push
+      - name: Commit and push
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add posts/ history.db || true
-          git commit -m "Backup: $(date)" || echo "Nothing to commit"
+          git commit -m "자동 백업: $(date)" || echo "No changes"
           git push
