@@ -2,8 +2,8 @@ name: Tistory Auto Post
 
 on:
   schedule:
-    - cron: '0 3 * * *'   
-  workflow_dispatch:       # 수동 실행도 가능
+    - cron: '0 3 * * *'   # 매일 9시 (KST) 실행
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,9 +20,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+
       - name: Run script
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          TISTORY_ACCESS_TOKEN: ${{ secrets.TISTORY_ACCESS_TOKEN }}
+          TISTORY_ID: ${{ secrets.TISTORY_ID }}
+          TISTORY_PW: ${{ secrets.TISTORY_PW }}
           TISTORY_BLOG_NAME: ${{ secrets.TISTORY_BLOG_NAME }}
         run: python tistory_auto.py
